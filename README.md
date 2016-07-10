@@ -1,6 +1,8 @@
 # react-project
 
-Node
+Node Usage
 
-npm install </br>
+git clone https://github.com/prabk005/react-project
+npm install
 node server.js
+Go to localhost:3000
