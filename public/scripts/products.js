@@ -330,7 +330,7 @@ var ProductForm = React.createClass({
           visible={this.state.errorVisible}
           errorMessage={this.state.errorMessage} />
           <input type="submit" className="btn btn-primary" value="Submit"
-            disabled={!this.state.name || !this.state.price || !this.state.quantity}/>
+            disabled={!this.state.name || !this.state.price || !this.state.quantity || !isNaN(this.state.errorVisible)}/>
         </form>
       </div>
     )
