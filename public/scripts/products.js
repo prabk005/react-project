@@ -257,7 +257,8 @@ var ProductForm = React.createClass({
       price: '',
       quantity: '',
       errorMessage: "",
-      errorVisible: false
+      errorVisible: false,
+      disabled: false
     };
   },
 
@@ -284,12 +285,12 @@ var ProductForm = React.createClass({
       // Display error message
       errorVisible = true;
       // Update State of error message and error class
-      this.setState({errorMessage: message,errorVisible: errorVisible});
+      this.setState({errorMessage: message,errorVisible: errorVisible, disabled: true});
     } else {
       // Hide error message
       errorVisible = true;
       //Update state of error message and error class
-      this.setState({errorMessage: message,errorVisible: errorVisible});
+      this.setState({errorMessage: message,errorVisible: errorVisible, disabled: false});
    }
 
   },
@@ -330,7 +331,7 @@ var ProductForm = React.createClass({
           visible={this.state.errorVisible}
           errorMessage={this.state.errorMessage} />
           <input type="submit" className="btn btn-primary" value="Submit"
-            disabled={!this.state.name || !this.state.price || !this.state.quantity || !isNaN(this.state.errorVisible)}/>
+            disabled={!this.state.name || !this.state.price || !this.state.quantity || this.state.disabled}/>
         </form>
       </div>
     )
