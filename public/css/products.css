@@ -84,3 +84,7 @@ input:disabled, button:disabled{
 .btnDelete {
   background-color: #f44336 !important;
 }
+
+.error_container {
+  color: red;
+}

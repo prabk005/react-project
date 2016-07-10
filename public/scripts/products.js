@@ -222,6 +222,32 @@ var Products = React.createClass({
 }); //Close Products Component
 
 
+// Validation Error Message Component for ProductForm
+var InputError = React.createClass({
+  // Set initial state for Component
+  getInitialState: function() {
+    return {
+      message: 'Input is invalid'
+    };
+  },
+  render: function(){
+    // Determine class according to value of props.visible
+    var errorClass = classNames(this.props.className, {
+      'error_container':   true,
+      'visible':           this.props.visible,
+      'invisible':         !this.props.visible
+    });
+    // Error message template
+    return (
+      <div className={errorClass}>
+        <span>{this.props.errorMessage}</span>
+      </div>
+    )
+  }
+
+});
+
+
 // Component for Form called from "Products" component
 var ProductForm = React.createClass({
   // Set the initial states for the component
@@ -229,7 +255,10 @@ var ProductForm = React.createClass({
     return {
       title: '',
       price: '',
-      quantity: ''};
+      quantity: '',
+      errorMessage: "",
+      errorVisible: false
+    };
   },
 
   // Callbacks fired and the state of the component is modified for roduct ame input
@@ -243,8 +272,26 @@ var ProductForm = React.createClass({
   },
 
   // Callbacks fired and the state of the component is modified for the qunaity of produts input
+  // Validation determined for quantity input
   quantityChange: function(e){
+    var message = "";
+    var errorVisible = false;
+
     this.setState({quantity: e.target.value});
+    // Check to see is input is not a number
+    if(isNaN(e.target.value)) {
+      message = "Input can only be a number!";
+      // Display error message
+      errorVisible = true;
+      // Update State of error message and error class
+      this.setState({errorMessage: message,errorVisible: errorVisible});
+    } else {
+      // Hide error message
+      errorVisible = true;
+      //Update state of error message and error class
+      this.setState({errorMessage: message,errorVisible: errorVisible});
+   }
+
   },
 
   onSubmit: function(e){
@@ -275,11 +322,15 @@ var ProductForm = React.createClass({
             <label>Product Name</label>
             <input type="text" className="form-control" onChange={this.nameChange} value={this.state.name} />
             <label>Price</label>
-            <input type="text" className="form-control" onChange={this.priceChange} value={this.state.price}  />
+            <input type="number" className="form-control" min="0.01" step="0.01" onChange={this.priceChange} value={this.state.price}  />
             <label>Quantity</label>
             <input type="text" className="form-control" onChange={this.quantityChange} value={this.state.quantity} />
           </div>
-          <input type="submit" className="btn btn-primary" value="Submit" disabled={!this.state.name || !this.state.price || !this.state.quantity}/>
+          <InputError
+          visible={this.state.errorVisible}
+          errorMessage={this.state.errorMessage} />
+          <input type="submit" className="btn btn-primary" value="Submit"
+            disabled={!this.state.name || !this.state.price || !this.state.quantity}/>
         </form>
       </div>
     )
@@ -305,7 +356,8 @@ var ProductList = React.createClass({
               <div className="col-sm-4"><span className="listProperty">Price:</span> ${product.price}</div>
               <div className="col-sm-4"><span className="listProperty">Quantity:</span> {product.quantity}</div>
               </div>
-              <button className="btn btn-primary" onClick={this.addToBucket.bind(this,product)} disabled={product.quantity==0}>Add To Cart</button>
+              <button className="btn btn-primary" onClick={this.addToBucket.bind(this,product)}
+                disabled={product.quantity==0}>Add To Cart</button>
               </li>
             }
           )
@@ -339,7 +391,8 @@ var BucketList = React.createClass({
             <div className="col-sm-6"><span className="listProperty">Product Name:</span> {bucket.name}</div>
             <div className="col-sm-6"><span className="listProperty">Quantity:</span> {bucket.quantity}</div>
             <div className="col-sm-6"><span className="listProperty">Total Price:</span> ${bucket.price*bucket.quantity}</div>
-            <div className="col-sm-6"><button  className="btn btn-primary btnDelete" onClick={this.onRemove.bind(this,bucket)}>Remove From Cart</button></div>
+            <div className="col-sm-6"><button  className="btn btn-primary btnDelete"
+              onClick={this.onRemove.bind(this,bucket)}>Remove From Cart</button></div>
             </div>
         </li>
       );
